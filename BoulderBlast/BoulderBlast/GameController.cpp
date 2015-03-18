@@ -149,13 +149,11 @@ void GameController::run(GameWorld* gw, string windowTitle)
 	glutCreateWindow(windowTitle.c_str()); 
 
 	initDrawersAndSounds();
-
 	glutKeyboardFunc(keyboardEventCallback);
 	glutSpecialFunc(specialKeyboardEventCallback);
 	glutReshapeFunc(reshapeCallback);
 	glutDisplayFunc(doSomethingCallback);
 	glutTimerFunc(MS_PER_FRAME, timerFuncCallback, 0);
-
 	glutMainLoop(); 
 }
 

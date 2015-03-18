@@ -1,0 +1,389 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1343\cocoasubrtf140
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset0 Menlo-Regular;}
+{\colortbl;\red255\green255\blue255;\red38\green44\blue106;\red71\green106\blue151;}
+\margl1440\margr1440\vieww10800\viewh8160\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\f0\fs24 \cf0 Rakshit Garg\
+404 420 830\
+\
+
+\b \ul 1. High Level Description - Actor.cpp\
+
+\b0 \
+class Base extends GraphObject\
+\pard\tx529\pardeftab529\pardirnatural
+
+\f1\fs22 \cf0 \ulnone \CocoaLigature0 	Base (\cf2 int\cf0  IID, \cf2 int\cf0  x, \cf2 int\cf0  y, \cf3 Direction\cf0  dir, \cf3 StudentWorld\cf0  *studWorld, \cf3 string\cf0  name); (Constructor that takes in an image ID, x, y, direction, studentWorld pointer, and string for the name of the class. It sets visibility and the object\'92s alive status to true and assigns the name parameter to a name private variable.) \
+
+\f0\fs24 \ul \CocoaLigature1 \
+
+\f1\fs22 \ulnone \CocoaLigature0     \cf2 virtual\cf0  \cf2 void\cf0  doSomething() = \cf2 0;\cf0  (Pure virtual function that is in the most base class because every derived class must have a doSomething() implementation, and each object does something different.) \
+\
+    \cf2 bool\cf0  isAlive (); (A getter function that returns a specific class\'92s alive or dead status. Not virtual because it doesn\'92t need to be implemented any differently for any class.) \
+\
+    \cf2 void\cf0  setAliveorDead (\cf2 bool\cf0  alive); (A setter function that sets an object\'92s alive or dead status\'97-a parameter of true means that the object is alive. Not virtual because the implementation is constant regardless of class.) \
+\
+    \cf3 StudentWorld\cf0 * getWorld(); (A getter function that returns a pointer to the StudentWorld object that the objects reside in. Not virtual because implementation does not change.) \
+\
+    \cf2 int\cf0  getHealth (); (A getter function for health. This is in the most base class because both Actors and Objects have health (i.e. the Player and the Boulder.))\
+\
+    \cf2 void\cf0  setHealth (\cf2 int\cf0  hp); (A setter for health variable. Not virtual because implementation does not change.) \
+\
+    \cf2 void\cf0  changeHealth(\cf2 int\cf0  howMuch); (A changer method for the health variable. Used whenever decrementing or incrementing the health of an object. )\
+\
+    \cf2 virtual\cf0  \cf2 bool\cf0  isBlocked(); (A virtual function for determining if an object blocks the player. This is in the most base class because every object can either block or not block the player.) \
+\
+    \cf2 virtual\cf0  \cf2 bool\cf0  isAttackable(); (A virtual function for determining if an object can be attacked by bullets. This is in the most base class because every object can be on the same place as a bullet, but they all interact with a bullet in different ways - i.e. taking damage versus letting a bullet pass over them). \
+\
+    \cf2 virtual\cf0  \cf2 void\cf0  damage(); (A virtual function that contains the logic for damaging a class that has been hit with a bullet. This is virtual because each object is damaged in a different way, in ways such as the amount of points to award the player.) \
+\
+    \cf2 virtual\cf0  ~Base() = \cf2 0\cf0 ; (Virtual destructor that guarantees the class will be treated as an abstract class. We don\'92t want anyone creating an object of type Base) \
+\
+    \cf3 string\cf0  getClass(); (Getter function for the name variable that was initialized at construction. This returns the name of the string and aids in collision detection. Not virtual because it simply returns the name variable which holds different values depending on the kind of object that it is.) \
+\
+\
+\cf2 \ul \ulc2 class\cf0 \ulc0  Actor extends \cf3 \ulc3 Base\cf0 \ulc0   \ulnone (This class doesn\'92t do much on its own. Its meant to be a short class that helps make the distinction between the Player/Robots and Objects more clear.) \
+\ul \
+\ulnone     Actor (\cf2 int\cf0  IID, \cf2 int\cf0  x, \cf2 int\cf0  y, \cf3 Direction\cf0  dir, \cf3 StudentWorld\cf0  *studWorld, \cf3 string\cf0  name); (Constructor that passes its parameters to the constructor for Base.) \
+\
+    \cf2 virtual\cf0  \cf2 void\cf0  doSomething () = \cf2 0\cf0 ; (Pure virtual function that makes Actor an abstract class. This will be implemented by every class that is derived from Actor.) \
+\
+\cf2 \ul \ulc2 class\cf0 \ulc0  Object extends \cf2 \ulc2 public\cf0 \ulc0  \cf3 \ulc3 Base\cf0 \ulc0  (\ulnone This class doesn\'92t do much on its own. Its meant to be a short class that helps make the distinction between the Player/Robots and Objects more clear) \
+\
+\ul \
+\ulnone Object (\cf2 int\cf0  IID, \cf2 int\cf0  x, \cf2 int\cf0  y, \cf3 Direction\cf0  dir, \cf3 StudentWorld\cf0  *studWorld, \cf3 string\cf0  name); (Constructor that passes its parameters to the constructor for Base.) \
+\
+    \cf2 virtual\cf0  \cf2 void\cf0  doSomething () = \cf2 0\cf0 ; (Pure virtual function that makes Object an abstract class. This will be implemented by every class that is derived from Object.) \
+\
+\cf2 \ul \ulc2 class\cf0 \ulc0  Player extends \cf2 \ulc2 public\cf0 \ulc0  \cf3 \ulc3 Actor\cf0 \ulc0  \
+\ulnone     Player (\cf2 int\cf0  IID, \cf2 int\cf0  x, \cf2 int\cf0  y, \cf3 Direction\cf0  dir, \cf3 StudentWorld\cf0  *studWorld, \cf3 string\cf0  name); (Player constructor that passes its parameters to the Actor constructor and sets the Player\'92s health to 20 hit points). \
+\
+    \cf2 virtual\cf0  \cf2 void\cf0  doSomething (); (Every time a key is pressed, this will move the player appropriately by called keyPressMovement(int x, int y, Direction dir), as long as the player is alive. This is virtual because it is redefining the doSomething() method found in its base classes.) \
+\
+    \cf2 virtual\cf0  \cf2 bool\cf0  isAttackable(); (Returns true because a player can be harmed by bullets. This is a virtual because it redefines the isAttackable() method found in base classes.) \
+\
+    \cf2 void\cf0  keyPressMovement(\cf2 int\cf0  x, \cf2 int\cf0  y, \cf3 Direction\cf0  dir); (Moves the player given an x, y, and direction and checks to make sure that there are no obstacles in that direction so the player can actually move. This is not virtual because it is not in any other class, derived or extended.) \
+\
+    \cf2 virtual\cf0  \cf2 void\cf0  damage(); (Virtual method that defines how the player will be damaged. It changes the health by 2, and if the health falls before 0, it will play a sound that the player died, decrement the amount of player lives, and set the player\'92s alive status to false. Otherwise, it will play a sound indicating the player was hurt and the game will keep going.) \
+\
+    \cf2 virtual\cf0  \cf2 bool\cf0  isBlocked(); (Returns true, because players block robots from moving onto its square. This is virtual since it redefines the isBlocked method found in base classes.) \
+\
+\cf2 \ul \ulc2 class\cf0 \ulc0  Robot extends \cf2 \ulc2 public\cf0 \ulc0  \cf3 \ulc3 Actor\cf0 \ulc0  \
+\ulnone 	Robot (\cf2 int\cf0  IID, \cf2 int\cf0  x, \cf2 int\cf0  y, \cf3 Direction\cf0  dir, \cf3 StudentWorld\cf0  *studWorld, \cf3 string\cf0  name); (Constructor that will pass its 5 parameters onto the Actor constructor that it is calling). \
+\
+    \cf2 virtual\cf0  \cf2 bool\cf0  isAttackable(); (Returns true because a robot can be harmed by bullets. This is a virtual because it redefines the isAttackable() method found in base classes.) \
+\
+    \cf2 virtual\cf0  \cf2 bool\cf0  isBlocked(); (Returns true, because robots block players from moving onto its square. Additionally, boulders cannot be moved onto the same space as a robot. This is virtual since it redefines the isBlocked method found in base classes.)\
+ \
+    \cf2 int\cf0  getTicks(); (Returns the amount of ticks that have passed.) \
+    \cf2 void\cf0  incrementTicksByOne(); (This will increase the amount of ticks that have passed by 1. This function is called once every tick, and this keeps a real time count of ticks passed in the game. This is nonvirtual and is in Robot because all robots operate on the same tick logic.) \
+\
+    \cf2 bool\cf0  linearMove(); (Checks for obstacles in the current direction of the robot. If there are obstacles, it won\'92t move and will return false. If there aren\'92t obstacles, it will move and once it has relocated the robot, return true. This is not virtual because all robots will move in the same way if they only need to move once in whatever direction they\'92re already facing. ) \
+\
+    \cf2 bool\cf0  moveWithSpecifiedDirection(\cf3 Direction\cf0  dir); (Takes in a specific direction and checks for the obstacles in that direction. If there are any obstacles, it won\'92t move and will return false. If there are, it will relocate the robot to one square in that direction that was passed in and return true. This does not need to be virtual because no other class will redefine this function. All robots move in this way with a specified direction.) \
+\
+    \cf2 bool\cf0  isCorrectTick(); (Uses the math found in the spec to calculate whether or not the robot should be doing something during this tick. If it should, the function returns true. If not, it will return false. Not virtual since all robots operate on the same tick logic. There is no tick where only certain kinds of robots can move and others cant.) \
+\
+    \cf2 bool\cf0  shoot(); (Checks for obstacles in the bullets path. If there aren\'92t object\'92s, it will create a new bullet, play a sound that the bullet has been fired, and add it to the student world. It will then return true. If the bullet was unable to be created because of an obstacle, it will return false.) \
+\
+\cf2 \ul \ulc2 class\cf0 \ulc0  SnarlBot extends \cf2 \ulc2 public\cf0 \ulc0  \cf3 \ulc3 Robot\cf0 \ulc0  \ulnone \
+	SnarlBot (\cf2 int\cf0  IID, \cf2 int\cf0  x, \cf2 int\cf0  y, \cf3 Direction\cf0  dir, \cf3 StudentWorld\cf0  *studWorld, \cf3 string\cf0  name); (Sets the health of the SnarlBot to 10, and passes its parameters to the constructor of the Robot). \
+\
+    \cf2 virtual\cf0  \cf2 void\cf0  doSomething(); (Checks to see if a SnarlBot is alive. If it is, it\'92ll check if the game is currently on the correct tick. If it is, then the snarlBot will try to shoot if it can. If it can\'92t do any of these things, it will move in the direction it is facing, and if it can\'92t move, for example, if its boxed in, it will flip directions during each correct tick. Virtual because this is redefining the doSomething that was in Actor.) \
+\
+    \cf2 virtual\cf0  \cf2 void\cf0  damage(); (Decrements health by 2, and if the health hits 0, it will set the alive status to false, play the sound of a robot dying, and increase the score by 100. Otherwise it will play a sound for the robot being damaged. This is virtual because each robot gives a different kind of points.) \
+\
+\cf2 \ul \ulc2 class\cf0 \ulc0  KleptoBot extends \cf2 \ulc2 public\cf0 \ulc0  \cf3 \ulc3 Robot\cf0 \ulc0  \
+\ulnone     KleptoBot (\cf2 int\cf0  IID, \cf2 int\cf0  x, \cf2 int\cf0  y, \cf3 Direction\cf0  dir, \cf3 StudentWorld\cf0  *studWorld, \cf3 string\cf0  name); (Sets the distance before turning for the Kleptobot to an integer in between 1 and 6. Also passes in its parameters to the Robot constructor.)\
+\
+    \cf3 Direction\cf0  randomDirectionGenerator(); (Creates a random direction and returns it. The derived regular kleptobots and angry kleptobots will inherit this method without needing to change the implementation, so this method does not need to be virtual.) \
+\
+    \cf2 void\cf0  setDistanceBeforeTurning(\cf2 int\cf0  rand); (Sets the distance before turning variable to the integer that is passed in. Does not need to be virtual since it will just be inherited as is by all of its derived class.) \
+\
+    \cf2 int\cf0  getDistanceBeforeTurning(); (Getter method for the distance before turning variable. This simply returns the integer that will be used in comparisons later on to see if the kleptobot should be moving or changing direction. This will also be inherited so it doesn\'92t need to be virtual since it will never be redefined.) \
+\
+    \cf2 bool\cf0  pickedUpAGoody(); (If the kleptobot is on the same square as a goodie, this method will pick up the goodie 10% of the time that it is called. It\'92ll return true if the goodie was picked up and false if it wasnt. This doesn\'92t need to be virtual since both kinds of kleptobots deal with goody\'92s in the same way.) \
+\
+    \cf2 bool\cf0  getHoldingGoody(); (Returns whether or not a kleptobot is holding a goody. This is the same for both kinds of kleptobots, which is why its in the kleptobot class and nonvirtual.) \
+\
+    \cf3 string\cf0  getGoodyType(); (Returns a string that represents the kind of goodie that the bot picked up. This is constant in its implementation and is the same for both regular and angry kleptobots.) \
+\
+    \cf2 bool\cf0  moveWithoutObstacles(); (If there are no obstacles in the way, then this function will call the linearMove function defined earlier and move once in the direction the robot is already facing. Afterwards it will return true. Otherwise, if there is an obstacle or it can\'92t move for whatever reason this function will return false. This is constant for kleptobots, so it makes sense to be in a base kleptobot class rather than just angry or regular kleptobots.) \
+\
+    \cf2 bool\cf0  getFoundObstacle(); (Returns the boolean for foundObstacle. This is used in the moveWithoutObstacles function to see whether or not a movement is possible in that direction. This also does not change depending on the type of kleptobot.) \
+\
+    \cf2 bool\cf0  moveWithObstacles(); (If the distance moved is more than the distance before turning, or if we have found an obstacle, this function will reset all of the boolean variables to false and then go through each of the four directions until it finds one it can move in. If it has considered all four, and it couldn\'92t move in any of them, it will just set the direction of the robot to a random direction until the next tick. If we have set the direction or have moved, this function returns true. Otherwise it will return false. This is the same movement logic for both kinds of kleptobots, so its okay to have it just be inherited and be non virtual.) \
+\
+\
+\cf2 \ul \ulc2 class\cf0 \ulc0  RegularKleptoBot extends \cf2 \ulc2 public\cf0 \ulc0  \cf3 \ulc3 KleptoBot\cf0 \ulc0  \
+\ulnone     RegularKleptoBot (\cf2 int\cf0  IID, \cf2 int\cf0  x, \cf2 int\cf0  y, \cf3 Direction\cf0  dir, \cf3 StudentWorld\cf0  *studWorld, \cf3 string\cf0  name); (Sets the health to 5, and passes in parameters that will initialize the KleptoBot constructor.) \
+\
+    \cf2 virtual\cf0  \cf2 void\cf0  doSomething(); (If the kleptobot is alive, and its the correct tick, if the kleptobot picked up a goody this will return. Otherwise, if it can move and there are no obstacles, it will do so by calling the moveWithoutObstacles() method. Otherwise, if there is an obstacle, it will call the moveWithObstacles() method and perform an action that way. This is a specific implementation that only pertains to regular kleptobots, which is why it is a virtual method.) \
+\
+    \cf2 virtual\cf0  \cf2 void\cf0  damage(); (Decrements the robot\'92s health by 2, and if the health hits 0, it\'92ll set alive to false. If the kleptobot was holding a goodie, it will create a new goody where it died. Then this method will play a sound for the robot dying and increase score by 10. If the kleptobot doesn\'92t die, it\'92ll just play an impact sound. This is a unique implementation specifically for regular kleptobots, which is why it needs to be virtual and can\'92t just be inherited from some base class.) \
+\
+\cf2 \ul \ulc2 class\cf0 \ulc0  AngryKleptoBot extends \cf2 \ulc2 public\cf0 \ulc0  \cf3 \ulc3 KleptoBot\cf0 \ulc0  \
+\ulnone     AngryKleptoBot (\cf2 int\cf0  IID, \cf2 int\cf0  x, \cf2 int\cf0  y, \cf3 Direction\cf0  dir, \cf3 StudentWorld\cf0  *studWorld, \cf3 string\cf0  name); (Sets the health to 8, and passes in parameters that will initialize the KleptoBot constructor.) \
+\
+    \cf2 virtual\cf0  \cf2 void\cf0  damage(); (Decrements the robot\'92s health by 2, and if the health hits 0, it\'92ll set alive to false. If the kleptobot was holding a goodie, it will create a new goody where it died. Then this method will play a sound for the robot dying and increase score by 20. If the kleptobot doesn\'92t die, it\'92ll just play an impact sound. This is a unique implementation specifically for regular kleptobots, which is why it needs to be virtual and can\'92t just be inherited from some base class.)\
+\
+    \cf2 virtual\cf0  \cf2 void\cf0  doSomething(); (If the angry kleptobot is alive and the game is in the correct tick, the robot will try to shoot if the player is in its line of fire. If it can\'92t shoot, it will move, without obstacles at first, and if it can\'92t do that then with obstacles. All of these actions are facilitated by helper methods, so that the doSomething is calling a shoot(), pickedUpAGoody(), moveWithoutObstacles(), and moveWithObstacles(). This is a design decision made for both readability and reusability, and allows the angry kleptobot to preserve most of the logic of the regular kleptobot with the addition of a shooting mechanism.) \
+\
+\cf2 \ul \ulc2 class\cf0 \ulc0  Factory extends \cf2 \ulc2 public\cf0 \ulc0  \cf3 \ulc3 Object\cf0 \ulc0  \ulnone \
+    Factory (\cf2 int\cf0  IID, \cf2 int\cf0  x, \cf2 int\cf0  y, \cf3 Direction\cf0  dir, \cf3 StudentWorld\cf0  *studWorld, \cf3 string\cf0  name, \cf3 string\cf0  type); (Sets the type of factory that it is to the string variable that represents that type. Also, passes in the numerous parameters to the object constructor.) \
+\
+    \cf2 virtual\cf0  \cf2 bool\cf0  isAttackable(); (Returns false, because a bullet doesn\'92t do anything to Factories, it just hits it and nothing happens. This is virtual because it redefines the isAttackable function that is found in other classes)\
+ \
+    \cf2 virtual\cf0  \cf2 void\cf0  doSomething(); (If the number of kleptobots in a 3 square radius from the factory is less than three and there isnt a kleptobot of either type on the factory, there is a 1 in 50 chance that a new kleptobot is going to be created. If it is, this will play a sound indicating a new robot has been born. This is a virtual function because it redefines the doSomething method that is found in its parent classes.) \
+\
+    \cf2 virtual\cf0  \cf2 bool\cf0  isBlocked(); (Returns true, because the player isn\'92t allowed to move onto factories. This is redefining the isBlocked that is found in other Object derived classes, which is why it needs to be a virtual function.) \
+\
+    \cf2 int\cf0  getKleptos(\cf2 int\cf0  x, \cf2 int\cf0  y); (Retrieves a count of the amount of kleptobots in a 3 square radius. If that radius takes us out of the bounds of the map, this will automatically check for bounds and adjust the radius accordingly. Returns that integer count to be used in createKlepto(). This does not need to be virtual because this is the only place where it is used.) \
+\
+    \cf2 bool\cf0  createKlepto(); (If the type of factory is regular, this will create a regular kleptobot and call a student world function to add it to the list of objects in the game. If its an angry factory, it will do the same thing, except with new angry kleptobots. If it is unable to create robots, it will return false. Otherwise it returns true. Because this is a method that only affects the factory class, the function doesnt need to be virtual.) \
+\
+\
+\cf2 \ul \ulc2 class\cf0 \ulc0  Bullet extends \cf2 \ulc2 public\cf0 \ulc0  \cf3 \ulc3 Object\cf0 \ulc0 \
+\ulnone     Bullet (\cf2 int\cf0  IID, \cf2 int\cf0  x, \cf2 int\cf0  y, \cf3 Direction\cf0  dir, \cf3 StudentWorld\cf0  *studWorld, \cf3 string\cf0  name); (Depending on the direction that the bullet is created with, the bullet will be rendered on the square over one in that direction. Additionally, this constructor passes its parameters into the object parameter.) \
+\
+    \cf2 virtual\cf0  \cf2 void\cf0  doSomething(); (If the bullet is alive, and the object at its x and y is attackable, then the bullet will damage that object. It will then set itself to false and return. Otherwise, it will keep moving and if the next object is attackable it will damage it and set itself to false. This is virtual because doSomething is being redefined here.) \
+\
+    \cf2 virtual\cf0  \cf2 bool\cf0  isBlocked(); (Sets isBlocked to true, because the player can\'92t walk through bullets. It needs to be blocked by them so that it can be hurt by them and not move while its being shot. This is not virtual because it doesn\'92t redefine the isBlocked function. ) \
+\
+    \cf2 void\cf0  move(); (depending on the direction of the bullet, it will move over one square in that direction. This is specific only to bullet, which is why its not a virtual function.) \
+\
+\
+\cf2 \ul \ulc2 class\cf0 \ulc0  Exit extends \cf2 \ulc2 public\cf0 \ulc0  \cf3 \ulc3 Object\cf0 \ulc0 \
+\ulnone     Exit (\cf2 int\cf0  IID, \cf2 int\cf0  x, \cf2 int\cf0  y, \cf3 Direction\cf0  dir, \cf3 StudentWorld\cf0  *studWorld, \cf3 string\cf0  name); (Sets itself to invisible by default and passes its parameters into the Object constructor.)\
+\
+    \cf2 virtual\cf0  \cf2 void\cf0  doSomething(); (Detects if the player has stepped on it and it is visible. If this is true, it will finish the level, add 2000 to the player\'92s score, and play a sound to tell the player that they\'92ve completed that level.)\
+\
+\cf2 \ul \ulc2 class\cf0 \ulc0  Wall extends \cf2 \ulc2 public\cf0 \ulc0  \cf3 \ulc3 Object\cf0 \ulc0  \
+\ulnone     Wall (\cf2 int\cf0  IID, \cf2 int\cf0  x, \cf2 int\cf0  y, \cf3 Direction\cf0  dir, \cf3 StudentWorld\cf0  *studWorld, \cf3 string\cf0  name); (Passes its parameters into the Object constructor)\
+\
+    \cf2 virtual\cf0  \cf2 void\cf0  doSomething(); (Walls dont do anything. This method doesn\'92t do anything. Its virtual because doSomething is in every class and so to redefine it for Walls it needs to be denoted by virtual.) \
+\
+    \cf2 virtual\cf0  \cf2 bool\cf0  isBlocked(); (Returns true because the player and boulders should not be able to go through walls. This is virtual because it has been redefined from its parent class.) \
+\
+    \cf2 virtual\cf0  \cf2 bool\cf0  isAttackable(); (Returns true because Walls can be attacked in that bullets hit them and die. They don\'92t have a health value so this doesnt lead to damage or some external effect.) \
+\};\
+\
+\cf2 \ul \ulc2 class\cf0 \ulc0  Boulder extends \cf2 \ulc2 public\cf0 \ulc0  \cf3 \ulc3 Object\cf0 \ulc0 \
+\ulnone     Boulder (\cf2 int\cf0  IID, \cf2 int\cf0  x, \cf2 int\cf0  y, \cf3 Direction\cf0  dir, \cf3 StudentWorld\cf0  *studWorld, \cf3 string\cf0  name); (Passes its parameters into the Object constructor, and sets health to 10 hit points.) \
+\
+    \cf2 virtual\cf0  \cf2 void\cf0  doSomething(); (Boulders don\'92t do anything. So this just returns.) \
+\
+    \cf2 virtual\cf0  \cf2 bool\cf0  isBlocked(); (Returns true, because boulders block players.) \
+\
+    \cf2 virtual\cf0  \cf2 bool\cf0  isAttackable(); (Returns true, because boulders can be attacked and destroyed.) \
+\
+    \cf2 void\cf0  push(\cf2 int\cf0  x, \cf2 int\cf0  y); (Moves itself to its current x plus the x parameter that is passed in, and the current y plus the y parameter that is passed in) \
+\
+    \cf2 virtual\cf0  \cf2 void\cf0  damage(); (Decrements health by 2, and if it goes below 0, sets its alive status to false.) \
+\
+\
+\cf2 \ul \ulc2 class\cf0 \ulc0  Hole extends \cf2 \ulc2 public\cf0 \ulc0  \cf3 \ulc3 Object\cf0 \ulc0  \
+\ulnone     Hole (\cf2 int\cf0  IID, \cf2 int\cf0  x, \cf2 int\cf0  y, \cf3 Direction\cf0  dir, \cf3 StudentWorld\cf0  *studWorld, \cf3 string\cf0  name); (Passes its parameters into the Object constructor, and does nothing else) \
+    \
+\cf2 	virtual\cf0  \cf2 void\cf0  doSomething(); (If a boulder is on the hole, this will set the hole\'92s alive status to false and kill the boulder as well. This is a virtual function because doSomething() is redefined across parent and child classes in the game design.) \
+    \
+	\cf2 virtual\cf0  \cf2 bool\cf0  isBlocked(); (Returns true, because a player shouldn\'92t be able to step onto a hole, unless its pushing a boulder onto it, that is. This is virtual because it can return different things depending on the type of object across its derivation structure.) \
+\
+\cf2 \ul \ulc2 class\cf0 \ulc0  Goody extends \cf2 \ulc2 public\cf0 \ulc0  \cf3 \ulc3 Object\cf0 \ulc0  \
+\ulnone     Goody (\cf2 int\cf0  IID, \cf2 int\cf0  x, \cf2 int\cf0  y, \cf3 Direction\cf0  dir, \cf3 StudentWorld\cf0  *studWorld, \cf3 string\cf0  name); (Passes its parameters into the Object constructor, and does nothing else. \
+\
+\
+\cf2 \ul \ulc2 class\cf0 \ulc0  Jewel extends \cf2 \ulc2 public\cf0 \ulc0  \cf3 \ulc3 Goody\cf0 \ulc0 \
+\ulnone     Jewel (\cf2 int\cf0  IID, \cf2 int\cf0  x, \cf2 int\cf0  y, \cf3 Direction\cf0  dir, \cf3 StudentWorld\cf0  *studWorld, \cf3 string\cf0  name); (Passes its parameters into the Goody constructor, specifically passing in the image id for a jewel) \
+\
+    \cf2 virtual\cf0  \cf2 void\cf0  doSomething(); (If the player is on the same spot as the jewel, increase score by 50 and play the goodie sound. The goodie is then removed from the map. Virtual because doSomething is redefined. )\
+\
+\cf2 \ul \ulc2 class\cf0 \ulc0  RestoreHealthGoody extends \cf2 \ulc2 public\cf0 \ulc0  \cf3 \ulc3 Goody\cf0 \ulc0 \
+\ulnone     RestoreHealthGoody (\cf2 int\cf0  IID, \cf2 int\cf0  x, \cf2 int\cf0  y, \cf3 Direction\cf0  dir, \cf3 StudentWorld\cf0  *studWorld, \cf3 string\cf0  name); (Passes its parameters into the Goody constructor, specifically passing in the image id for a restore health goody). \
+\
+    \cf2 virtual\cf0  \cf2 void\cf0  doSomething(); (If the player is on the same spot as a RestoreHealthGoody, increase score by 500, play a sound that the goodie was taken, set health to 20, and kill the goodie. This is virtual since doSomething here is different from doSomething from its parent.) \
+\
+\cf2 \ul \ulc2 class\cf0 \ulc0  ExtraLifeGoody extends \cf2 \ulc2 public\cf0 \ulc0  \cf3 \ulc3 Goody\cf0 \ulc0 \
+\ulnone     ExtraLifeGoody (\cf2 int\cf0  IID, \cf2 int\cf0  x, \cf2 int\cf0  y, \cf3 Direction\cf0  dir, \cf3 StudentWorld\cf0  *studWorld, \cf3 string\cf0  name); (Passes its parameters into the goody constructor, specifically passing in the image id for a extra life goody.) \
+\
+    \cf2 virtual\cf0  \cf2 void\cf0  doSomething(); (If the player is on the same spot as an Extra Life Goody, increase score by 1000, play a sound that the goodie was taken, increase the number of lives, and kill the goodie. This is virtual since doSomething has been redefined.) \
+\
+\cf2 \ul \ulc2 class\cf0 \ulc0  AmmoGoody extends \cf2 \ulc2 public\cf0 \ulc0  \cf3 \ulc3 Goody\cf0 \ulc0 \
+\ulnone     AmmoGoody (\cf2 int\cf0  IID, \cf2 int\cf0  x, \cf2 int\cf0  y, \cf3 Direction\cf0  dir, \cf3 StudentWorld\cf0  *studWorld, \cf3 string\cf0  name); (Passes its parameters into the goody constructor, specifically passing in the image id for an ammo goody). \
+\
+    \cf2 virtual\cf0  \cf2 void\cf0  doSomething(); (If the player is on the same spot as an Ammo Goody, increase the score by 100 and increase ammo by 20. A sound will play and the goody will be removed. This is virtual since doSomething is being redefined). \
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\f0\b\fs24 \cf0 \ul \CocoaLigature1 High Level Description - StudentWorld.cpp\
+\pard\tx529\pardeftab529\pardirnatural
+
+\f1\b0\fs22 \cf0 \CocoaLigature0 \
+	\ulnone ~StudentWorld(); (Iterates through the list of actors and deletes each item)\
+ \
+    \cf2 virtual\cf0  \cf2 int\cf0  init(); (Loads the level. Checks to make sure the level has not yet hit 100, and that the file is not in a bad format and can actually be loaded. If the level file is able to be loaded, it will load the level and create all of the objects that the level needs. This is virtual because it is redefining the init method found in its superclass, GameWorld.) \
+\
+    \cf2 virtual\cf0  \cf2 int\cf0  move(); (Updates the line of text that displays at the top of the screen during gameplay. It then iterates through the list of active actors, and if each one is alive, it will ask them to do something. If the player is found to be dead, the game will end. If the player has completed the level, the score is increased, the bonus is reset to 1000, and the level is finished. Otherwise, if the actor is not alive, it will be removed from the list. Bonus is decremented by 1 point each time this function is called. Once all of the jewels in the level are picked up, this function will set the exit to be visible and play a sound to show that the exit has been revealed. If the player has died, we return and the game ends. If the level has been finished, the score is increased by the remaining bonus amount, and the bonus is reset to 1000. If none of these things occur, the game simply continues. This is virtual because it is redefining the method found in GameWorld.) \
+\
+    \cf2 virtual\cf0  \cf2 void\cf0  cleanUp(); (Iterates through the list and deletes each object in it. This is virtual because it redefines the method found in its superclass, GameWorld.) \
+\
+    \cf2 void\cf0  updateDisplayText(); (Creates a string to represent the data that needs to be displayed. ) \
+\
+    Base* getObject(\cf2 int\cf0  x, \cf2 int\cf0  y); (Iterates through the list, and given an x and a y location, returns a pointer to the object at this location. If there is no object, it will return an null pointer.) \
+\
+    Base* getObjectNotAt(\cf2 int\cf0  x, \cf2 int\cf0  y, string ID); (Iterates through the list and finds the object at a location at x and y, as long as it does not match the string ID that is passed in.) \
+\
+    StudentWorld* getStudentWorld(); (Returns a pointer to the student world that is in use.) \
+\
+    \cf2 int\cf0  getAmmo (); (Returns the amount of ammunition left that the player has.) \
+\
+    \cf2 void\cf0  incAmmo (\cf2 int\cf0  howMuch); (Increases or decreases the ammunition by an amount that is passed in as a parameter.) \
+\
+    \cf2 void\cf0  addBullet (Bullet* bullet); (Adds a bullet to the actor list.) \
+\
+    \cf2 void\cf0  addKlepto (KleptoBot* k); (Adds a kleptobot to the actor list.) \
+\
+    \cf2 void\cf0  setExitVisible(Exit* e, \cf2 bool\cf0  yesOrNo); (Toggles the exit\'92s visibility depending on whats passed in as a parameter.) \
+\
+    \cf2 bool\cf0  areThereJewelsLeft(); (Iterates through the list and if it finds a jewel, returns true. If there were no jewels found in the list, return false.) \
+\
+    \cf2 unsigned\cf0  \cf2 int\cf0  getBonus(); (Gets the bonus amount that is left.) \
+\
+    \cf2 void\cf0  decBonus(); (Decrements the bonus by 1 as long as the bonus is a positive number, so that it never dips below 0.) \
+\
+    \cf2 void\cf0  setBonus(\cf2 int\cf0  number); (Sets the bonus to whatever number is passed in as a parameter). \
+\
+    \cf2 bool\cf0  getPlayerDead(); (Gets the alive or dead status of the player. True represents that the player is dead, and false represents that the player is alive.) \
+\
+    \cf2 void\cf0  setCompletedLevel(\cf2 bool\cf0  isHeDone); (Sets the level completed to be true or false, depending on the parameter that is passed in.) \
+\
+    \cf2 bool\cf0  getCompletedLevel(); (Gets whether or not the level has been completed.)\
+ \
+    \cf2 bool\cf0  areObstaclesInBetweenRobotAndPlayer(GraphObject::Direction dir, \cf2 int\cf0  x, \cf2 int\cf0  y, \cf2 int\cf0  px, \cf2 int\cf0  py); (Checks to see whether or not there are any obstacles in between the Robot (whose location is represented by x and y) and the Player (whose location is represented by px and py). Depending on the direction, the area we need to search changes, so this method takes the direction into account to determine an accurate search area and then it iterates through those locations in the actor list to determine if there are any obstacles in between the robot and the player.) \
+\
+    \cf2 bool\cf0  isObjectInRowOrColumn(GraphObject::Direction dir, \cf2 int\cf0  x, \cf2 int\cf0  y, string ID); (If the direction is left or right, this will check for any objects of type ID in that row. If the the direction is up or down, this checks for any objects of type ID in that column. Returns true if there is an object and false if there isn\'92t.) \
+\
+    \cf2 bool\cf0  isBotFacingPlayer(GraphObject::Direction dir, \cf2 int\cf0  x, \cf2 int\cf0  y, \cf2 int\cf0  px, \cf2 int\cf0  py); (Depending on the direction, this finds whether or not the player and the robot are in the same row or column and are facing each other. If they are, this will return true, and if otherwise it will return false.) \
+\
+    \cf2 int\cf0  getPlayerX(); (Gets the x value of the player\'92s location.) \
+\
+    \cf2 int\cf0  getPlayerY(); (Gets the y value of the player\'92s location.) \
+\
+    \cf2 void\cf0  createGoody(\cf2 int\cf0  x, \cf2 int\cf0  y, string type); (Creates a goody of the type that is passed in at the x and y value.) \
+\
+    string levelLoader(); (Creates a string that changes depending on the level number, so that the correct level is loaded each time the player finishes or restarts a level.) \
+\
+\ul \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\f0\b\fs24 \cf0 \CocoaLigature1 2. Functionality\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\b0 \cf0 \ulnone To my knowledge, my code is complete. I do not think that I haven\'92t implemented any part of the spec. 
+\f1\fs22 \ul \CocoaLigature0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\f0\b\fs24 \cf0 \CocoaLigature1 \
+3. Design Assumption\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\b0 \cf0 \ulnone I assumed that boulders cannot be pushed onto the exit square and that Kleptobots should be able to walk over the exit even if it is visible. I also assumed that Kleptobots cannot pick up jewels, they can only pick up goodies. 
+\b \ul \
+\pard\tx529\pardeftab529\pardirnatural
+
+\f1\b0\fs22 \cf0 \ulnone \CocoaLigature0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\f0\b\fs24 \cf0 \ul \CocoaLigature1 4. Testing \
+\
+Actor.cpp \
+\
+\pard\tx529\pardeftab529\pardirnatural
+
+\f1\b0\fs22 \cf2 \ulc2 \CocoaLigature0 class\cf0 \ulc0  Base : \cf2 \ulc2 public\cf0 \ulc0  \cf3 \ulc3 GraphObject \cf0 \ulc0 \
+\ulnone Because this is an abstract base class, I did not do any testing. Instead, I tested its derived classes. \
+\ul \
+\cf2 \ulc2 class\cf0 \ulc0  Actor : \cf2 \ulc2 public\cf0 \ulc0  \cf3 \ulc3 Base\cf0 \ulc0 \
+\ulnone Because this is an abstract base class, I did not do any testing. Instead, I tested its derived classes. \ul \
+\
+\cf2 \ulc2 class\cf0 \ulc0  Object : \cf2 \ulc2 public\cf0 \ulc0  \cf3 \ulc3 Base\cf0 \ulc0 \
+\ulnone Because this is an abstract base class, I did not do any testing. Instead, I tested its derived classes. \
+\ul \
+\cf2 \ulc2 class\cf0 \ulc0  Player : \cf2 \ulc2 public\cf0 \ulc0  \cf3 \ulc3 Actor\cf0 \ulc0 \
+\ulnone To test player, I first made sure that it moved the way it was supposed to, so I placed it in an empty map with only walls and made sure it couldn\'92t move past them. Afterwards, I incorporated elements such as holes and factories and made sure I couldn\'92t move past them, but that I could if I was pushing a boulder into a hole. To test its damage function, I stood in the line of fire of a snarlbot and made sure it took 10 shots to hurt me. \ul \
+\
+\cf2 \ulc2 class\cf0 \ulc0  Robot : \cf2 \ulc2 public\cf0 \ulc0  \cf3 \ulc3 Actor\cf0 \ulc0  \
+\ulnone Although Robot is a base class, it contains a few key methods that all robots employ, so this class required multiple rounds of testing. First, I created a SnarlBot that inherits the getTicks and incrementTicksByOne methods and made sure that the SnarlBots were only moving once every so often, and that they were all moving at the same time as each other. Then, I incorporated linearMove and moeWithSpecifiedDirection which allows the snarlbots to move while accounting for no direction, obstacles, and a specified direction. I made sure that the robots would switch direction when they moved or found an obstacle, and recorded to the console in each method with just 1 snarlbot on the screen so i could make sure the methods were being called when they were supposed to. To test shoot, I put the snarlbot behind obstacles such as walls and boulders to make sure it wouldn\'92t shoot if I (the player) was behind an obstacle. \ul \
+\
+\cf2 \ulc2 class\cf0 \ulc0  SnarlBot : \cf2 \ulc2 public\cf0 \ulc0  \cf3 \ulc3 Robot\cf0 \ulc0 \
+\ulnone Snarlbot did not really need any testing outside of the testing I mentioned in Robot because the methods its using in its doSomething are literally inherited from Robot without any redefinition. In its doSomething, I tested its linearmove by making sure that it would flip direction if the method returned false. This enables the Snarlbot to face the opposite way when it hits a wall such as in Level 00. I needed to test damage by making sure that the appropriate sounds played, so I would shoot the snarlbot 4 times, making sure that each time a hit sound was played, and then on the 5 time, make sure that the dead sound played and the bot was removed from the game. \ul \
+\
+\cf2 \ulc2 class\cf0 \ulc0  KleptoBot : \cf2 \ulc2 public\cf0 \ulc0  \cf3 \ulc3 Robot\cf0 \ulc0  \
+\ulnone DISCLAIMER: Because of the nature of the Kleptobot is so reliant on randomness, there is a degree of uncertainty to my tests. \
+\
+I spawned a kleptobot and surrounded it with goodies of various kinds so I could make sure that it would only pick up 1 goody at a time and that the goodies would disappear if they were picked up. Also, I made sure there were no other actors in the game and just watched the kleptobot run randomly. Because every other square in the map was a goody, with the exception of a walled border, I could virtually guarantee that a goody should\'92ve been picked up, since theres a 10% chance of it happening. Then, I spawned a player and killed the kleptobot, so I could verify that the kleptobot had dropped the goody and that the new goody was pickupable by the player. For the kleptobot\'92s movement functions, I spawned a kleptobot and surrounded it with walls. This let me make sure that it wouldn\'92t cross over obstacles and it would always set a random direction. \
+\ul \
+\cf2 \ulc2 class\cf0 \ulc0  RegularKleptoBot : \cf2 \ulc2 public\cf0 \ulc0  \cf3 \ulc3 KleptoBot\cf0 \ulc0  \
+\
+\ulnone A regular kleptobot is essentially the same as its base class, except that it implements the functions in Kleptobot. Thus, testing Kleptobot was sufficient to test regular kleptobot. \ul \
+\
+\cf2 \ulc2 class\cf0 \ulc0  AngryKleptoBot: \cf2 \ulc2 public\cf0 \ulc0  \cf3 \ulc3 KleptoBot\cf0 \ulc0  \
+\
+\ulnone An angry kleptobot is also already accounted for since it is the same as a regular kleptobot, except that it can shoot. Thus, testing the shoot function of the robot class and testing the kleptobot class was good enough to test an angry kleptobot. \ul \
+\
+\cf2 \ulc2 class\cf0 \ulc0  Factory : \cf2 \ulc2 public\cf0 \ulc0  \cf3 \ulc3 Object\cf0 \ulc0 \
+\ulnone To test factory, I placed a factory where it needs to go in Level 00, since it is caged by a wall on 3 sides. This lets us make sure that the robots are only created in empty space or on the factory square. I outputted the number of kleptobots in a 3 square radius of the factory to the console every time the doSomething method was called which let me make sure that the code was doing a reliably accurate job of keeping track of how many kleptobots there were around it. With this information, I was able to make sure that the robots where only being born if there were less than 3 around. \
+\ul \
+\cf2 \ulc2 class\cf0 \ulc0  Bullet : \cf2 \ulc2 public\cf0 \ulc0  \cf3 \ulc3 Object\
+\pard\tx529\pardeftab529\pardirnatural
+\cf0 \ulnone To test bullet, I shot at walls, boulders, and robots of both kinds both with obstacles in between and holes to make sure that the bullets were passing over holes and goodies and jewels but stopping at object such as walls and boulders. Additionally, I made sure that the bullets were damaging the objects appropriately by shooting each object that can be damaged slowly and outputting their health in between. For example, I stood and shot at a boulder slowly until it died, verifying that its health went down by 2 in between each shot, and that it died when the health went below 0. \ul \
+\
+\pard\tx529\pardeftab529\pardirnatural
+\cf2 \ulc2 class\cf0 \ulc0  Exit : \cf2 \ulc2 public\cf0 \ulc0  \cf3 \ulc3 Object\cf0 \ulc0  \
+\ulnone I ran the level with various amounts of jewels and ran through them to make sure that the jewel counter worked properly, because the correct operation of that counter is essential to exit showing up at the right time. I outputted the number of jewels after each tick of the game, and when it went to 0, verified that the reveal exit sound played and the exit was rendered where its supposed to be. Then, I made sure that the exit was only working for the player, and it wouldn\'92t finish the level when a kleptobot stood on it, by placing a factory near the exit and waiting for a kleptobot to walk on it. \ul \
+\
+\cf2 \ulc2 class\cf0 \ulc0  Wall : \cf2 \ulc2 public\cf0 \ulc0  \cf3 \ulc3 Object\cf0 \ulc0  \
+\ulnone Walls don\'92t really do anything so I didnt need to test this very much. I just made sure that the walls blocked objects from going through them by putting the player and making it hit a wall in all four directions. \
+\ul \
+\cf2 \ulc2 class\cf0 \ulc0  Boulder : \cf2 \ulc2 public\cf0 \ulc0  \cf3 \ulc3 Object\cf0 \ulc0  \
+\ulnone Boulders can be pushed, but not onto walls or robots, so I pushed a boulder in all four directions into various obstacles and made sure that it would stop and wouldn\'92t keep going. \ul \
+\
+\cf2 \ulc2 class\cf0 \ulc0  Hole : \cf2 \ulc2 public\cf0 \ulc0  \cf3 \ulc3 Object\cf0 \ulc0  \
+\ulnone Holes don\'92t do much. I just made sure that when a boulder was pushed onto the hole, it disappeared, and that bullets could go over holes by shooting at them. I also made sure that robots couldn\'92t walk over holes by creating a horizontal snarlbot that was surrounded by a hole in both directions. \ul \
+\
+\cf2 \ulc2 class\cf0 \ulc0  Goody : \cf2 \ulc2 public\cf0 \ulc0  \cf3 \ulc3 Object\cf0 \ulc0 \
+\ulnone Goody is a base class that doesn\'92t do anything on its own. No testing required. \
+\ul \
+\cf2 \ulc2 class\cf0 \ulc0  Jewel : \cf2 \ulc2 public\cf0 \ulc0  \cf3 \ulc3 Goody\cf0 \ulc0  \
+\ulnone I made sure that the points were only rewarded once a player stepped onto the jewel and that other robots couldn\'92t make the sound play by stepping onto it. I also made sure that the jewel disappeared once it was taken by the player. \ul \
+\
+\cf2 \ulc2 class\cf0 \ulc0  RestoreHealthGoody : \cf2 \ulc2 public\cf0 \ulc0  \cf3 \ulc3 Goody\cf0 \ulc0  \
+\ulnone Testing for this was very similar to the jewel, with the exception of kleptobots being able to take this goody and the other goodies below. This is explained more in detail in the Kleptobot section. I mainly had to add another check that made sure points weren\'92t rewarded to the player when a kleptobot stole the goody. In terms of the player, I had to make sure that the player\'92s health went back to 100% when the player stepped on it. \
+\ul \
+\cf2 \ulc2 class\cf0 \ulc0  ExtraLifeGoody : \cf2 \ulc2 public\cf0 \ulc0  \cf3 \ulc3 Goody\cf0 \ulc0  \
+\ulnone I made sure that when the player stepped onto the goody, a life would be added, and that the goody disappeared.  \
+\ul \
+\cf2 \ulc2 class\cf0 \ulc0  AmmoGoody : \cf2 \ulc2 public\cf0 \ulc0  \cf3 \ulc3 Goody\cf0 \ulc0  \
+\ulnone I made sure that when the player stepped onto the ammo goody, more ammo would be added and the goody would disappear. \ul \
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\f0\b\fs24 \cf0 \CocoaLigature1 StudentWorld.cpp\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\b0 \cf0 \ulnone Because so many of student world\'92s functions are used by the functions in Actor.cpp (such as isBotFacingPlayer(), getObject(), getObjectNotAt()) testing those classes incorporated tests for many of these functions. \
+\
+The best way I tested the game was playing it several times and making sure that everything worked normally and there weren\'92t any outstanding bugs. \
+\
+In terms of underlying bugs or issues with my code, I specifically tested the leveling mechanism. \
+\
+Leveling was very important in studentworld, so I made sure that my string stream worked and generated the correct level strings that would be loaded. I made bogus levels and tried to run levels that didnt exist to make sure that appropriate error messages would be shown. I also beat the first level and made sure the second level would show up afterwards. \
+\
+To test isObjectInRowOrColumm(), I ouputted the return value and placed the player in various cases that I knew would be true or false and matched the output to what I thought the result should be. \
+\
+To test areObstaclesInBetweenRobotAndPlayer(), I pushed a boulder in between me and a snarlbot, and made sure that the output value of the function was true. \
+
+\f1\fs22 \ul \CocoaLigature0 \
+}

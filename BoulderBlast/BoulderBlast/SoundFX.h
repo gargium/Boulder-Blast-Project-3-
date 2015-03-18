@@ -56,7 +56,7 @@ class SoundFXController
 {
   public:
 	void playClip(std::string soundFile)
-	{
+    {   
 		std::system(("/usr/bin/afplay " + soundFile + " &").c_str());
 	}
 	
